@@ -1,0 +1,20 @@
+@model FleteAnalize
+
+    <h1 class="text-center">Krijo nje Flete analize</h1>
+<div class="row">
+  <form  asp-controller="Home" asp-action="CreateFletAnalize"  method="post">
+    <div class="col-sm-6">
+              <div class="form-group">
+                  <span asp-validation-for="Emri"></span>
+                  <label asp-for="Emri"></label>
+                  <input asp-for="Emri" class="form-control" >
+                </div>         
+    </div>
+    <div class="col-sm-6">
+      <button type="submit" class="btn btn-primary mt-3">Vendos Emrin</button>
+      <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3 mr-3" > Kthehu pas</a>
+      </div>
+</form>
+</div> 
+
+

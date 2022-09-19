@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+ <form asp-controller="Home" asp-action="Index">
+    <p>
+        Title: <input type="text" name="SearchString" />
+        <input class="btn btn-primary" type="submit" value="Filter" />
+    </p>
+</form>
+<div class="row">
+   <div class="col sm-6">
+            <table class="table table-striped table-bordered  ">
+                <thead>
+                    <tr>
+                        <th   scope="col">Emri</th>
+                        <th   scope="col">Njesia</th>
+                        <th   scope="col">Norma</th>
+                        <th   scope="col">Cmimi</th>
+                        <th   scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Analiz )
+                    {
+                    <tr>
+                        <td scope="row"> @item.Emri</td>
+                        <td scope="row"> @item.Njesia</td>
+                        <td scope="row"> @item.Norma</td>
+                        <td scope="row"> @item.Cmimi</td>
+
+                        <td scope="row"> 
+                            <a class="btn btn-primary" asp-action="EditAnaliz" asp-controller="Home" asp-route-id="@item.AnalizaId" > Edito</a> 
+                            <a class="btn btn-primary" asp-action="FshiAnaliz" asp-controller="Home" asp-route-id="@item.AnalizaId" > Fshi</a>
+                        
+                        </td>
+                    </tr>
+                         }
+        </tbody>
+    </table>
+

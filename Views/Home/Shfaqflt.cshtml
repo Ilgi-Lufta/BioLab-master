@@ -1,0 +1,78 @@
+
+
+<div class="row">
+       <h1 class="mb-5"> @ViewBag.thisflet.Emri</h1>
+   <div class="col-sm-8">
+            <table class="table table-striped table-bordered  ">            
+                <thead>
+                    <tr>
+                        <th   scope="col">Emri</th>
+                        <th   scope="col">Njesia</th>
+                        <th   scope="col">Norma</th>
+                        <th   scope="col">Cmimi</th>
+                        <th   scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.thisflet.mtms )
+                    {
+                    <tr>
+                        <td scope="row"> @item.Myanaliz.Emri</td>
+                        <td scope="row"> @item.Myanaliz.Njesia</td>
+                        <td scope="row"> @item.Myanaliz.Norma</td>
+                        <td scope="row"> @item.Myanaliz.Cmimi</td>
+                        <td scope="row"> 
+                            <a class="btn btn-primary" asp-action="Hiqngalista" asp-controller="Home" asp-route-id="@item.AnalizaId" asp-route-id2="@ViewBag.thisflet.FleteAnalizeId" > hiq nga lista</a>
+                        
+                        </td>
+
+                    </tr>
+                         }
+        </tbody>
+    </table>
+
+    <h3>Totali : @ViewBag.thisflet.Totali</h3>
+    
+   
+   </div>
+   
+    
+<div class="col-sm-4">
+
+<form asp-controller="Home" asp-action="Shfaqflt" >
+    <p>
+        Title: <input type="text" name="SearchString" />
+        <input class="btn btn-primary" type="submit" value="Filter" />
+    </p>
+</form>
+            <table class="table table-striped table-bordered  ">     
+                <thead>
+                    <tr>
+                        <th   scope="col ">Emri</th>
+                        <th   scope="col">Njesia</th>
+                        <th   scope="col">Norma</th>
+                        <th   scope="col">Cmimi</th>
+                        <th   scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Analiz )
+                    {
+                    <tr>
+                        <td scope="row"> @item.Emri</td>
+                        <td scope="row"> @item.Njesia</td>
+                        <td scope="row"> @item.Norma</td>
+                        <td scope="row"> @item.Cmimi</td>
+                        <td scope="row"> 
+                            <a class="btn btn-primary" asp-action="SHtoneliste" asp-controller="Home" asp-route-id="@item.AnalizaId" asp-route-id2="@ViewBag.thisflet.FleteAnalizeId" > Shto ne liste</a>
+                        </td>
+                    </tr>
+                         }
+        </tbody>
+    </table>
+
+</div>
+</div>
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Home" > Perfundo</a>
+
+

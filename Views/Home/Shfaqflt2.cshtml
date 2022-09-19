@@ -1,0 +1,107 @@
+<h3>Emri Pacientit : @ViewBag.thisflet.MyPacient.Emripacientit</h3>
+<h3>Seksi : @ViewBag.thisflet.MyPacient.Gjinia</h3>
+<h3>Tipi pacientit : @ViewBag.thisflet.MyPacient.Tipi</h3>
+<h3>Mosha: @ViewBag.thisflet.MyPacient.Mosha</h3>
+<h3>Data: @ViewBag.thisflet.CreatedAt.ToString(string.Format("dd/MM/yyyy"))</h3>
+<div class="row">
+    <div class="col-sm-8">
+        <table class="table table-striped table-bordered  ">
+            <thead>
+                <tr>
+                    <th scope="col">Emri</th>
+                    <th scope="col">Njesia</th>
+                    <th scope="col">Norma</th>
+                    <th scope="col">Vlera</th>
+                    <th scope="col">Cmimi</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.thisflet.mtms)
+                {
+                    <tr>
+                        <td scope="row"> @item.Myanaliz.Emri</td>
+                        <td scope="row"> @item.Myanaliz.Njesia</td>
+                        <td style="width:15% ;" scope="row">
+                            <form asp-controller="Home" asp-action="Save2" asp-route-id="@item.AnalizaId"
+                            asp-route-id2="@ViewBag.thisflet.FleteAnalizeId" asp-route-idmodel="@ViewBag.idmodel"
+                            method="post">
+                                <div class="form-group">
+                                    <input type="text" name="vlera" class="form-control">
+                                    <input class="btn btn-primary" type="submit" value="ruaj" />
+                                </div>
+                            </form>
+                        </td>
+                        <td scope="row"> @item.Myanaliz.Norma</td>
+                        <td scope="row"> @item.Myanaliz.Cmimi</td>
+                        <td scope="row">
+
+                            <a class="btn btn-primary" asp-action="Hiqngalista2" asp-controller="Home" asp-route-id="@item.AnalizaId"
+                            asp-route-id2="@ViewBag.thisflet.FleteAnalizeId" asp-route-id3="@ViewBag.idmodel"> hiq nga
+                                lista</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <form asp-controller="Home" asp-action="Shfaqflt2" asp-route-id="@ViewBag.idmodel"
+                            asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">
+            <p>
+                Title: <input type="text" name="zbritja" />
+                <input class="btn btn-primary" type="submit" value="bej zbritjen" />
+            </p>
+        </form>
+        
+
+        <h3> Totali : @ViewBag.thisflet.Totali</h3>
+        @if(ViewBag.thisflet.Pagesa==false)
+        {
+            <h3>per tu paguar : @ViewBag.thisflet.Paguar </h3>
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Paguar" asp-route-id="@ViewBag.idmodel"
+                            asp-route-id2="@ViewBag.thisflet.FleteAnalizeId"> bej pagesen</a>
+        }else{
+            <h3>Paguar : @ViewBag.thisflet.Paguar</h3>
+        }
+        
+    </div>
+    <div class="col-sm-4">
+        <form asp-controller="Home" asp-action="Shfaqflt2" asp-route-id="@ViewBag.idmodel"
+                            asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">
+            <p>
+                Title: <input type="text" name="SearchString" />
+                <input class="btn btn-primary" type="submit" value="Filter" />
+            </p>
+        </form>
+            <table class="table table-striped table-bordered  ">
+
+                <thead>
+                    <tr>
+                        <th scope="col ">Emri</th>
+                        <th scope="col">Njesia</th>
+                        <th scope="col">Norma</th>
+                        <th scope="col">Cmimi</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in ViewBag.Analiz)
+                    {
+                        <tr>
+                            <td scope="row"> @item.Emri</td>
+                            <td scope="row"> @item.Njesia</td>
+                            <td scope="row"> @item.Norma</td>
+                            <td scope="row"> @item.Cmimi</td>
+                            <td scope="row">
+                                <a class="btn btn-primary" asp-action="SHtoneliste2" asp-controller="Home" asp-route-id="@item.AnalizaId"
+                                asp-route-id2="@ViewBag.thisflet.FleteAnalizeId" asp-route-id3="@ViewBag.idmodel">
+                                    Shto ne liste</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <a class="btn btn-primary" asp-action="Printo2" asp-controller="Home" asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">Printo</a>
