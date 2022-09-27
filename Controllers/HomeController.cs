@@ -104,6 +104,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
+        ViewBag.admin= admin;
 
         return View();
     }
@@ -111,9 +112,15 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult CreateAnaliz(Analiza marrngaadd)
     {
+         int admin = (int)HttpContext.Session.GetInt32("AdminId");
+
+        if (admin == null)
+        {
+            return RedirectToAction("homepage");
+        }
         if (ModelState.IsValid)
         {
-            if (_context.Analizat.Any(u => u.Emri == marrngaadd.Emri))
+            if ((_context.Analizat.Any(u =>( u.Emri == marrngaadd.Emri) && (u.AdminId == admin) ))  )
             {
                 // Manually add a ModelState error to the Email field, with provided
                 // error message
@@ -455,6 +462,16 @@ public class HomeController : Controller
 
         if (ModelState.IsValid)
         {
+            if ((_context.FleteAnalizes.Any(u =>( u.Emri == marrngaadd.Emri) && (u.AdminId == admin) ))  )
+            {
+                // Manually add a ModelState error to the Email field, with provided
+                // error message
+                ModelState.AddModelError("Emri", "Name already in use!");
+
+                // You may consider returning to the View at this point
+                return View("AddFleteAnalize");
+            }
+
             Pacient ilgi = new Pacient()
             {
                 Emripacientit = "Model",
