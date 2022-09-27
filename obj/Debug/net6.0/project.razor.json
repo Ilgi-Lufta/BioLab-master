@@ -16338,11 +16338,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\35569\\Desktop\\BioLab-master\\Views\\Home\\Shfaqflt3.cshtml",
-      "TargetPath": "Views\\Home\\Shfaqflt3.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\35569\\Desktop\\BioLab-master\\Views\\_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
       "FileKind": "mvc"

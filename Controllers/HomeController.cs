@@ -23,7 +23,7 @@ public class HomeController : Controller
     private static Random random = new Random();
 
 
-
+    //krijojm ne string me 8 karaktere random
     public static string RandomString(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -44,9 +44,11 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-        var Analiz =  await _context.Analizat.Where(e => e.AdminId == admin).ToListAsync();
-        ViewBag.Analiz =  Analiz;
 
+        //shfaqim listen me analiza
+        var Analiz = await _context.Analizat.Where(e => e.AdminId == admin).ToListAsync();
+        ViewBag.Analiz = Analiz;
+        //funksioni kerkimit sipas emrit te analizes
         if (!String.IsNullOrEmpty(searchString))
         {
             ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
@@ -61,10 +63,10 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-
+        //shfaqim listen me fleta analizash model
         var Flete = await _context.FleteAnalizes.Where(e => e.model == true).Where(e => e.AdminId == admin).ToListAsync();
         ViewBag.Flete = Flete;
-
+        //funksioni kerkimit sipas emrit te fletes se analizes
         if (!String.IsNullOrEmpty(SearchString2))
         {
             ViewBag.Flete = Flete.Where(s => s.Emri!.Contains(SearchString2) && s.model == true);
@@ -81,10 +83,10 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-
+        //shfaqim listen me fleta analizash 
         var Flete = await _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).Where(e => e.model == false).Where(e => e.AdminId == admin).ToListAsync();
         ViewBag.Flete = Flete;
-
+        //funksioni kerkimit sipas emrit te pacientit
         if (!String.IsNullOrEmpty(searchString2))
         {
             ViewBag.Flete = Flete.Where(s => s.MyPacient.Emripacientit!.Contains(searchString2));
@@ -104,7 +106,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-        ViewBag.admin= admin;
+
 
         return View();
     }
@@ -112,7 +114,7 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult CreateAnaliz(Analiza marrngaadd)
     {
-         int admin = (int)HttpContext.Session.GetInt32("AdminId");
+        int admin = (int)HttpContext.Session.GetInt32("AdminId");
 
         if (admin == null)
         {
@@ -120,26 +122,23 @@ public class HomeController : Controller
         }
         if (ModelState.IsValid)
         {
-            if ((_context.Analizat.Any(u =>( u.Emri == marrngaadd.Emri) && (u.AdminId == admin) ))  )
+            //bejm kontrollin nese ekziston nje analize me kte emer e krijuar nga admini i loguar
+            if ((_context.Analizat.Any(u => (u.Emri == marrngaadd.Emri) && (u.AdminId == admin))))
             {
                 // Manually add a ModelState error to the Email field, with provided
                 // error message
                 ModelState.AddModelError("Emri", "Name already in use!");
 
-                // You may consider returning to the View at this point
                 return View("AddAnaliz");
             }
-
-
+            //vendosim lidhjen one to many per analizat e adminit te loguar
+            // dhe e ruajm analizesn ne db
             int IntVariable = (int)HttpContext.Session.GetInt32("AdminId");
             marrngaadd.AdminId = IntVariable;
             _context.Add(marrngaadd);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
-
-
         return View("AddAnaliz");
     }
 
@@ -195,6 +194,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
+        //kalojm fleten e mare nga db qe id qe marim si parameter eshte e njete me fleteanalizeId
         ViewBag.id = id;
         ViewBag.thisflet = _context.FleteAnalizes.Where(e => e.AdminId == admin).FirstOrDefault(p => p.FleteAnalizeId == id);
 
@@ -210,17 +210,22 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
+        //vendosim kryer2 ne 0 qe do te thote se
+        // action Shfaqflt2  nuk eshte eskzekutuar
         HttpContext.Session.SetInt32("kryer2", 0);
         if (ModelState.IsValid)
         {
             FleteAnalize fltdb = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id);
-
-            if (_context.Pacients.Any(e => e.NrPersonal == marrngaadd.NrPersonal))
+            //kontrollojm nese ekziston nje pacient me nr personal e mar nga forma me i krijuar nga admini i loguar
+            if (_context.Pacients.Any(e => (e.NrPersonal == marrngaadd.NrPersonal) && (e.AdminId == admin)))
             {
+                //editojm moshen dhe gjinine dhe ruajm ndryshimet
                 Pacient pacinetiekzistues = _context.Pacients.FirstOrDefault(e => e.NrPersonal == marrngaadd.NrPersonal);
                 pacinetiekzistues.Mosha = marrngaadd.Mosha;
                 pacinetiekzistues.Gjinia = marrngaadd.Gjinia;
                 _context.SaveChanges();
+                // krijojm nje flete analize te re me one to many te pacinetit te mar nga db
+                //dhe one to many per adminin e loguar,kalojm dhe emrin e modelit te fletes se nalizes se perdorur
                 FleteAnalize flrEre = new FleteAnalize
                 {
                     Emri = fltdb.Emri,
@@ -229,19 +234,23 @@ public class HomeController : Controller
                 };
                 _context.Add(flrEre);
                 _context.SaveChanges();
-
+                //Marrim fleten e sapo krijuar dhe bejm redirect tek shfaqflet2 me id e fletes se sapokrijuar
                 FleteAnalize fltkrijuar = _context.FleteAnalizes.OrderByDescending(p => p.CreatedAt).FirstOrDefault();
 
                 return RedirectToAction("Shfaqflt2", new { id = id, id2 = fltkrijuar.FleteAnalizeId });
             }
             else
             {
+                //nese nga forma marim nje pacint te ri gjenerojm passwordin
+                // dhe plotesojm mardhenjen one to many me adminin
                 marrngaadd.Password = RandomString(8);
                 marrngaadd.AdminId = admin;
                 _context.Add(marrngaadd);
                 _context.SaveChanges();
-
+                //Marrim Pacinetin e sapo krijuar
                 Pacient pacineti = _context.Pacients.OrderByDescending(p => p.CreatedAt).FirstOrDefault();
+                // krijojm nje flete analize te re me one to many te pacinetit te mar nga db
+                //dhe one to many per adminin e loguar,kalojm dhe emrin e modelit te fletes se nalizes se perdorur
                 FleteAnalize flrEre = new FleteAnalize
                 {
                     Emri = fltdb.Emri,
@@ -250,7 +259,7 @@ public class HomeController : Controller
                 };
                 _context.Add(flrEre);
                 _context.SaveChanges();
-
+                //Marrim fleten e sapo krijuar dhe bejm redirect tek shfaqflet2 me id e fletes se sapokrijuar
                 FleteAnalize fltkrijuar = _context.FleteAnalizes.OrderByDescending(p => p.CreatedAt).FirstOrDefault();
                 return RedirectToAction("Shfaqflt2", new { id = id, id2 = fltkrijuar.FleteAnalizeId });
             }
@@ -259,6 +268,62 @@ public class HomeController : Controller
         {
             return RedirectToAction("PerdorFlete", new { id = id });
         }
+    }
+     public IActionResult Shfaqflt2(string searchString, int id, int id2, float zbritja)
+    {
+        int admin = (int)HttpContext.Session.GetInt32("AdminId");
+
+        if (admin == null)
+        {
+            return RedirectToAction("homepage");
+        }
+        //marim nje liste me analiza te krijuar nga admini i loguar
+        var Analiz = from m in _context.Analizat.Where(e => e.AdminId == admin)
+                     select m;
+        ViewBag.Analiz = Analiz;
+        ///funksioni i kerkimit sipas emrit te analizes
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
+        }
+
+        int kryer = (int)HttpContext.Session.GetInt32("kryer2");
+        //nese ky veprim nuk eshte kryer asnjehere dmth kryer = 0 
+        if (kryer == 0)
+        {
+            //kalojme totalin nga fleta analizes model tek fleta e analizes qe sapo krijuam te re(ilgi2)
+            FleteAnalize ilgi = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id);
+            FleteAnalize ilgi2 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
+            ilgi2.Totali = ilgi.Totali;
+            ilgi2.Paguar = ilgi2.Totali;
+            _context.SaveChanges();
+//kalojme tek fleta e re e e anlizes mardhenjet many to many 
+//te fletes se anlizes qe meret si model
+            foreach (var item in ilgi.mtms)
+            {
+                mtm mymtm = new mtm()
+                {
+                    AnalizaId = item.AnalizaId,
+                    FleteAnalizeId = id2
+                };
+                _context.Add(mymtm);
+                _context.SaveChanges();
+            }
+        }
+        //nese parametri zbritja eshte i ndryshem nga 0 kryej funksionin e meposhtem
+        FleteAnalize ilgi3 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
+        if (zbritja != 0)
+        {
+            ilgi3.Paguar = ilgi3.Totali - zbritja;
+            ilgi3.Zbritja = zbritja;
+            _context.SaveChanges();
+        }
+        //vendosim kryer2 ne vleren 1 qe do te thote se
+        // ky funksion eshte ekzekutuar nje here
+        HttpContext.Session.SetInt32("kryer2", 1);
+        ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
+        ViewBag.idmodel = id;
+        return View();
     }
 
     public IActionResult LogIn()
@@ -277,16 +342,23 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userInDb = _context.Pacients.FirstOrDefault(u => u.NrPersonal == user.NrPersonal);
 
+            var userInDb = _context.Pacients.FirstOrDefault(u => u.NrPersonal == user.NrPersonal);
+            //kontrollojme nese usseInDb ekzsiton
             if (userInDb == null)
             {
                 // Add an error to ModelState and return to View!
                 ModelState.AddModelError("NrPersonal", "Invalid NrPersonal/Password");
                 return View("LogIn");
             }
-            HttpContext.Session.SetInt32("UserId", userInDb.PacientId);
-            return RedirectToAction("MyTestResult");
+            // kontrollojm nese passwordi eshte i sakte
+            if (user.Password == userInDb.Password)
+            {
+                HttpContext.Session.SetInt32("UserId", userInDb.PacientId);
+                return RedirectToAction("MyTestResult");
+            }
+
+
         }
         return View("LogIn");
     }
@@ -318,7 +390,7 @@ public class HomeController : Controller
                 // handle failure (this should be similar to how "existing email" is handled)
                 return View("LogInAdmin");
             }
-
+            //vendosim sesion si id e adminit ne db
             HttpContext.Session.SetInt32("AdminId", userInDb.AdminId);
             return RedirectToAction("Home");
         }
@@ -349,6 +421,16 @@ public class HomeController : Controller
         }
         if (ModelState.IsValid)
         {
+            //bejm kontrollin nese ekziston nje analize me kte emer e krijuar nga admini i loguar
+            if ((_context.Analizat.Any(u => (u.Emri == marrngaadd.Emri) && (u.AdminId == admin))))
+            {
+                // Manually add a ModelState error to the Email field, with provided
+                // error message
+                ModelState.AddModelError("Emri", "Name already in use!");
+
+                return RedirectToAction("EditAnaliz", new { id = id });
+            }
+            //marrim nga db anzlizen qe duam te bejm edit dhe vendosim vlerat qe marim nga forma
             Analiza editing = _context.Analizat.FirstOrDefault(p => p.AnalizaId == id);
             editing.Emri = marrngaadd.Emri;
             editing.Njesia = marrngaadd.Njesia;
@@ -358,11 +440,7 @@ public class HomeController : Controller
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-        else
-        {
-            Analiza editing = _context.Analizat.FirstOrDefault(p => p.AnalizaId == id);
-            return RedirectToAction("Index");
-        }
+        return RedirectToAction("EditAnaliz", new { id = id });
     }
 
     [HttpPost]
@@ -376,14 +454,15 @@ public class HomeController : Controller
         }
         if (ModelState.IsValid)
         {
-            if (_context.FleteAnalizes.Any(u => u.Emri == marrngaadd.Emri))
+            //bejm kontrollin nese ekziston nje flete analize me kte emer e krijuar nga admini i loguar
+            if (_context.FleteAnalizes.Any(u => (u.Emri == marrngaadd.Emri) && (u.AdminId == admin)))
             {
-                FleteAnalize Editing1 = _context.FleteAnalizes.FirstOrDefault(p => p.FleteAnalizeId == id);
                 ModelState.AddModelError("Emri", "Fleta Analizes ekziston!");
                 return RedirectToAction("EditFlete", new { id = id });
             }
             else
             {
+                //marrim nga db anzlizen qe duam te bejm edit dhe vendosim vlerat qe marim nga forma
                 FleteAnalize editing = _context.FleteAnalizes.FirstOrDefault(p => p.FleteAnalizeId == id); // marrengaadd.DishId nuk mund te zevendesohet me id sepse nxjerr problem
                 editing.Emri = marrngaadd.Emri;
                 editing.UpdatedAt = DateTime.Now;
@@ -391,11 +470,8 @@ public class HomeController : Controller
                 return RedirectToAction("Shfaqflt", new { id = id });
             }
         }
-        else
-        {
-            Analiza editing = _context.Analizat.FirstOrDefault(p => p.AnalizaId == id);
-            return RedirectToAction("EditFlete", new { id = id });
-        }
+        return RedirectToAction("EditFlete", new { id = id });
+
     }
 
 
@@ -407,6 +483,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
+        //fshijme analizen e marre nga db me analizId si parametri id
         Analiza removingAnaliza = _context.Analizat.FirstOrDefault(p => p.AnalizaId == id);
         _context.Analizat.Remove(removingAnaliza);
         _context.SaveChanges();
@@ -414,24 +491,21 @@ public class HomeController : Controller
 
     }
 
-
-
     public IActionResult FshiFlete(int id)
     {
         int admin = (int)HttpContext.Session.GetInt32("AdminId");
-
         if (admin == null)
         {
             return RedirectToAction("homepage");
         }
+        //fshijme fleten e analizes e marre nga db me analizId si parametri id
         FleteAnalize removingAnaliza = _context.FleteAnalizes.FirstOrDefault(p => p.FleteAnalizeId == id);
         _context.FleteAnalizes.Remove(removingAnaliza);
         _context.SaveChanges();
         return RedirectToAction("kerkoFleta");
-
     }
 
-    public async Task<IActionResult> AddFleteAnalize(string searchString)
+    public IActionResult AddFleteAnalize()
 
     {
         int admin = (int)HttpContext.Session.GetInt32("AdminId");
@@ -440,13 +514,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-        var Analiz = await _context.Analizat.Where(e => e.AdminId == admin).ToListAsync();
-        ViewBag.Analiz = Analiz;
 
-        if (!String.IsNullOrEmpty(searchString))
-        {
-            ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
-        }
         return View();
     }
 
@@ -462,7 +530,8 @@ public class HomeController : Controller
 
         if (ModelState.IsValid)
         {
-            if ((_context.FleteAnalizes.Any(u =>( u.Emri == marrngaadd.Emri) && (u.AdminId == admin) ))  )
+            //bejm kontrollin nese ekziston nje flete analize me kte emer e krijuar nga admini i loguar
+            if ((_context.FleteAnalizes.Any(u => (u.Emri == marrngaadd.Emri) && (u.AdminId == admin))))
             {
                 // Manually add a ModelState error to the Email field, with provided
                 // error message
@@ -471,7 +540,7 @@ public class HomeController : Controller
                 // You may consider returning to the View at this point
                 return View("AddFleteAnalize");
             }
-
+            //krijojme nje pacient model per kte flete analize model
             Pacient ilgi = new Pacient()
             {
                 Emripacientit = "Model",
@@ -480,10 +549,10 @@ public class HomeController : Controller
                 Mosha = 99,
                 NrPersonal = "Model",
                 AdminId = admin
-
             };
             _context.Add(ilgi);
             _context.SaveChanges();
+            //krijojme mardhenjet one to many te fletes se analizes me adminin dhe pacientin e sapokrijuar
             Pacient Pdb = _context.Pacients.OrderByDescending(e => e.CreatedAt).FirstOrDefault();
 
             marrngaadd.model = true;
@@ -492,6 +561,7 @@ public class HomeController : Controller
 
             _context.Add(marrngaadd);
             _context.SaveChanges();
+            //kalojme si parameter fleteanalizeid te fletes te sapokrijuar dhe bejm rederect
             FleteAnalize fltdb = _context.FleteAnalizes.OrderByDescending(e => e.CreatedAt).FirstOrDefault();
 
             return RedirectToAction("Shfaqflt", new { id = fltdb.FleteAnalizeId });
@@ -507,10 +577,11 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
+        //kalojm listen me analiza
         var Analiz = from m in _context.Analizat.Where(e => e.AdminId == admin)
                      select m;
         ViewBag.Analiz = Analiz;
-
+        //bejme kerkimin sipas emrit te analizes
         if (!String.IsNullOrEmpty(searchString))
         {
             ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
@@ -520,257 +591,85 @@ public class HomeController : Controller
 
         return View();
     }
-    public IActionResult Shfaqflt3(string searchString, int id, float zbritja)
-    {
-        int admin = (int)HttpContext.Session.GetInt32("AdminId");
-
-        if (admin == null)
-        {
-            return RedirectToAction("homepage");
-        }
-
-        var Analiz = from m in _context.Analizat.Where(e => e.AdminId == admin)
-                     select m;
-        ViewBag.Analiz = Analiz;
-
-        if (!String.IsNullOrEmpty(searchString))
-        {
-            ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
-        }
-        FleteAnalize ilgi3 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id);
-
-        if (zbritja != 0)
-        {
-            ilgi3.Paguar = ilgi3.Totali - zbritja;
-            ilgi3.Zbritja = zbritja;
-            _context.SaveChanges();
-        }
-
-        ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id);
-
-        return View();
-    }
-
-
-
 
     public IActionResult SHtoneliste(int id, int id2)
     {
-
+        //nese ekzstion many to many midis analizes dhe fletes se analizes
+        // mos te krijohet 2 here ne db kjo many to many
         List<mtm> allmtm = _context.mtms.ToList();
         mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
         if (allmtm.Contains(dbmtm))
         {
-            return RedirectToAction("Shfaqflt", new
-            {
-                id = id2
-
-            });
-
+            return RedirectToAction("Shfaqflt", new { id = id2 });
         }
         else
         {
+            //nese many to many nuk ekziston krijom nje te re me parametrat e mar nhga funksioni
             mtm ilgi = new mtm()
             {
                 AnalizaId = id,
                 FleteAnalizeId = id2
             };
             _context.Add(ilgi);
+            //per cdo analiz qe i shtohet fletes se analizes shtojm cmimin tnga totali
             Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
             FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
             flt1.Totali = an1.Cmimi + flt1.Totali;
             flt1.Paguar = flt1.Totali;
             _context.SaveChanges();
-            return RedirectToAction("Shfaqflt", new
-            {
-                id = id2
-
-            });
+            return RedirectToAction("Shfaqflt", new { id = id2 });
         }
     }
-
-    public IActionResult SHtoneliste3(int id, int id2)
-    {
-
-        List<mtm> allmtm = _context.mtms.ToList();
-        mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
-        if (allmtm.Contains(dbmtm))
-        {
-            return RedirectToAction("Shfaqflt3", new
-            {
-                id = id2
-
-            });
-
-        }
-        else
-        {
-            mtm ilgi = new mtm()
-            {
-                AnalizaId = id,
-                FleteAnalizeId = id2
-            };
-            _context.Add(ilgi);
-            Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
-            FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
-            flt1.Totali = an1.Cmimi + flt1.Totali;
-            flt1.Paguar = flt1.Totali;
-            _context.SaveChanges();
-            return RedirectToAction("Shfaqflt3", new
-            {
-                id = id2
-
-            });
-        }
-    }
-
+    //shfaq fleten e  analizes gati per printim
     public IActionResult Printo(int id2)
     {
         ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
         return View();
     }
 
-
     public IActionResult Hiqngalista(int id, int id2)
     {
+        //nese ekzstion many to many midis analizes dhe fletes se analizes i bejm remove nga db
         List<mtm> allmtm = _context.mtms.ToList();
         mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
         if (allmtm.Contains(dbmtm))
         {
+            //per cdo analiz qe i hiqet fletes se analizes zbresim cmimin nga totali
             Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
             FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
+
             flt1.Totali = flt1.Totali - an1.Cmimi;
             flt1.Paguar = flt1.Totali;
 
             _context.mtms.Remove(dbmtm);
             _context.SaveChanges();
-            return RedirectToAction("Shfaqflt", new
-            {
-                id = id2
-
-            });
+            return RedirectToAction("Shfaqflt", new { id = id2 });
         }
         else
         {
-
-            return RedirectToAction("Shfaqflt", new
-            {
-                id = id2
-
-            });
+            return RedirectToAction("Shfaqflt", new { id = id2 });
         }
     }
-    public IActionResult Hiqngalista3(int id, int id2)
-    {
-        List<mtm> allmtm = _context.mtms.ToList();
-        mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
-        if (allmtm.Contains(dbmtm))
-        {
-            Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
-            FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
-            flt1.Totali = flt1.Totali - an1.Cmimi;
-            flt1.Paguar = flt1.Totali;
 
-            _context.mtms.Remove(dbmtm);
-            _context.SaveChanges();
-            return RedirectToAction("Shfaqflt3", new
-            {
-                id = id2
-
-            });
-        }
-        else
-        {
-            return RedirectToAction("Shfaqflt3", new
-            {
-                id = id2
-
-            });
-        }
-    }
     [HttpPost]
     public IActionResult Save(int id, int id2, float vlera)
     {
-
+        //Ruajm vleren e mar nga forma tek analiza e mar nga db
         Analiza dbanaliz = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
 
         dbanaliz.Rezultati = vlera;
-
         dbanaliz.UpdatedAt = DateTime.Now;
         _context.SaveChanges();
 
-
-        return RedirectToAction("Shfaqflt", new
-        {
-            id = id2
-
-        });
+        return RedirectToAction("Shfaqflt", new { id = id2 });
     }
 
-
-    public IActionResult Shfaqflt2(string searchString, int id, int id2, float zbritja)
-    {
-        int admin = (int)HttpContext.Session.GetInt32("AdminId");
-
-        if (admin == null)
-        {
-            return RedirectToAction("homepage");
-        }
-        var Analiz = from m in _context.Analizat.Where(e => e.AdminId == admin)
-                     select m;
-        ViewBag.Analiz = Analiz;
-
-        if (!String.IsNullOrEmpty(searchString))
-        {
-            ViewBag.Analiz = Analiz.Where(s => s.Emri!.Contains(searchString));
-        }
-
-        int kryer = (int)HttpContext.Session.GetInt32("kryer2");
-
-        if (kryer == 0)
-        {
-
-
-            FleteAnalize ilgi = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id);
-            FleteAnalize ilgi2 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
-            ilgi2.Totali = ilgi.Totali;
-            ilgi2.Paguar = ilgi2.Totali;
-
-            _context.SaveChanges();
-
-
-            foreach (var item in ilgi.mtms)
-            {
-
-                mtm mymtm = new mtm()
-                {
-                    AnalizaId = item.AnalizaId,
-                    FleteAnalizeId = id2
-                };
-                _context.Add(mymtm);
-                _context.SaveChanges();
-            }
-
-
-        }
-        FleteAnalize ilgi3 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
-        if (zbritja != 0)
-        {
-            ilgi3.Paguar = ilgi3.Totali - zbritja;
-            ilgi3.Zbritja = zbritja;
-            _context.SaveChanges();
-        }
-
-        HttpContext.Session.SetInt32("kryer2", 1);
-        ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
-
-        ViewBag.idmodel = id;
-        return View();
-    }
+   
 
     public IActionResult SHtoneliste2(int id, int id2, int id3)
     {
-
+        //nese ekzstion many to many midis analizes dhe fletes se analizes
+        // mos te krijohet 2 here ne db kjo many to many
         List<mtm> allmtm = _context.mtms.ToList();
         mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
         if (allmtm.Contains(dbmtm))
@@ -779,12 +678,14 @@ public class HomeController : Controller
         }
         else
         {
+            //nese many to many nuk ekziston krijom nje te re me parametrat e mar nhga funksioni
             mtm ilgi = new mtm()
             {
                 AnalizaId = id,
                 FleteAnalizeId = id2
             };
             _context.Add(ilgi);
+            //per cdo analiz qe i shtohet fletes se analizes shtojm cmimin tnga totali
             Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
             FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
             flt1.Totali = an1.Cmimi + flt1.Totali;
@@ -794,6 +695,7 @@ public class HomeController : Controller
         }
     }
 
+    //shfaq fleten e  analizes gati per printim
     public IActionResult Printo2(int id2)
     {
         int admin = (int)HttpContext.Session.GetInt32("AdminId");
@@ -805,6 +707,8 @@ public class HomeController : Controller
         ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
         return View();
     }
+
+    //shfaq fleten e  analizes gati per printim
     public IActionResult Printo3(int id2)
     {
         ViewBag.thisflet = _context.FleteAnalizes.Include(e => e.MyPacient).Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
@@ -814,10 +718,12 @@ public class HomeController : Controller
 
     public IActionResult Hiqngalista2(int id, int id2, int id3)
     {
+        //nese ekzstion many to many midis analizes dhe fletes se analizes i bejm remove nga db
         List<mtm> allmtm = _context.mtms.ToList();
         mtm dbmtm = _context.mtms.FirstOrDefault(p => p.AnalizaId == id && p.FleteAnalizeId == id2);
         if (allmtm.Contains(dbmtm))
         {
+            //per cdo analiz qe i hiqet fletes se analizes zbresim cmimin nga totali
             Analiza an1 = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
             FleteAnalize flt1 = _context.FleteAnalizes.FirstOrDefault(e => e.FleteAnalizeId == id2);
             flt1.Totali = flt1.Totali - an1.Cmimi;
@@ -825,25 +731,15 @@ public class HomeController : Controller
 
             _context.mtms.Remove(dbmtm);
             _context.SaveChanges();
-            // HttpContext.Session.SetInt32("kryer2",1); 
-            return RedirectToAction("Shfaqflt2", new
-            {
-                id2 = id2,
-                id = id3
-
-            });
+            return RedirectToAction("Shfaqflt2", new { id2 = id2, id = id3 });
         }
         else
         {
-            // HttpContext.Session.SetInt32("kryer2",1); 
-            return RedirectToAction("Shfaqflt2", new
-            {
-                id2 = id2,
-                id = id3
-
-            });
+            return RedirectToAction("Shfaqflt2", new { id2 = id2, id = id3 });
         }
     }
+
+    //Ruajm vleren e mar nga forma tek analiza e mar nga db
     [HttpPost]
     public IActionResult Save2(int id, int id2, float vlera, int idmodel)
     {
@@ -851,13 +747,12 @@ public class HomeController : Controller
         Analiza dbanaliz = _context.Analizat.FirstOrDefault(e => e.AnalizaId == id);
 
         dbanaliz.Rezultati = vlera;
-
         dbanaliz.UpdatedAt = DateTime.Now;
         _context.SaveChanges();
 
         return RedirectToAction("Shfaqflt2", new { id2 = id2, id = idmodel });
     }
-
+    //vendosim atributin pagesa ne true te fletes se analises se marr nga db
     public IActionResult Paguar(int id, int id2)
     {
         FleteAnalize ilgi2 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id2);
@@ -867,6 +762,7 @@ public class HomeController : Controller
 
         return RedirectToAction("Shfaqflt2", new { id2 = id2, id = id });
     }
+    //vendosim atributin pagesa ne true te fletes se analises se marr nga db
     public IActionResult Paguar3(int id)
     {
         FleteAnalize ilgi2 = _context.FleteAnalizes.Include(e => e.mtms).ThenInclude(e => e.Myanaliz).FirstOrDefault(e => e.FleteAnalizeId == id);
@@ -876,6 +772,7 @@ public class HomeController : Controller
 
         return RedirectToAction("Shfaqflt", new { id = id });
     }
+    //vendosim atributin pagesa ne true te fletes se analises se marr nga db
 
     public IActionResult Paguar2(int id)
     {
@@ -883,12 +780,10 @@ public class HomeController : Controller
         ilgi2.Pagesa = true;
 
         _context.SaveChanges();
-
         return RedirectToAction("printo3", new { id2 = id });
     }
 
     public async Task<IActionResult> KerkoMeDate(DateTime searchFirstTime, DateTime searchSecondTime)
-
     {
         int admin = (int)HttpContext.Session.GetInt32("AdminId");
 
@@ -896,9 +791,11 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-        List<FleteAnalize> ilgi = await  _context.FleteAnalizes.Include(e => e.MyPacient).Where(e => e.AdminId == admin).Where(s => s.CreatedAt > searchFirstTime && s.CreatedAt < searchSecondTime/* && s.Pagesa == true*/).Where(e => e.model == false).ToListAsync();
+        //funksioni kerkimit sipas Dates te fletes se analizes
+        List<FleteAnalize> ilgi = await _context.FleteAnalizes.Include(e => e.MyPacient).Where(e => e.AdminId == admin).Where(s => s.CreatedAt > searchFirstTime && s.CreatedAt < searchSecondTime/* && s.Pagesa == true*/).Where(e => e.model == false).ToListAsync();
         ViewBag.Analiz = ilgi;
         float Totali = 0;
+        //ruajm ne total shumen e faturave te paguara
         foreach (var item in ilgi)
         {
             if (item.Pagesa == true)
@@ -910,7 +807,7 @@ public class HomeController : Controller
         ViewBag.totali = Totali;
         return View();
     }
-
+    //shfaqim listen me analiza nga pacienti i loguar
     public IActionResult MyTestResult()
     {
         int? id = (int)HttpContext.Session.GetInt32("UserId");
@@ -934,62 +831,56 @@ public class HomeController : Controller
         {
             return RedirectToAction("homepage");
         }
-         ViewBag.Admini=_context.Admins.FirstOrDefault(e => e.AdminId == admin);
+        ViewBag.Admini = _context.Admins.FirstOrDefault(e => e.AdminId == admin);
 
         var lastmonth = DateTime.Today.AddMonths(-1);
         var lastyear = DateTime.Today.AddMonths(-12);
-
-        ViewBag.pacientet=_context.Pacients.Where(e => e.AdminId == admin).Where(e=>e.Emripacientit!="Model").Count();
-        ViewBag.pacientetpapaguar=_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Where(e=>e.Pagesa==false).Count();
-       
-        ViewBag.pacientetpernjevit=_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Where(e=>e.CreatedAt>lastyear).Count();
-        ViewBag.pacientetpernjemuaj=_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Where(e=>e.CreatedAt>lastmonth).Count();
-       
-        ViewBag.revenewpernjevit=_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Where(e=>e.CreatedAt>lastyear).Sum(e=>e.Paguar);
-        ViewBag.revenewmuajinefundit=_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Where(e=>e.CreatedAt>lastmonth).Sum(e=>e.Paguar);
-        
+        //pacinentet ne total
+        ViewBag.pacientet = _context.Pacients.Where(e => e.AdminId == admin).Where(e => e.Emripacientit != "Model").Count();
+        //pacintet qe nuk kane ber pagesen
+        ViewBag.pacientetpapaguar = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.Pagesa == false).Count();
+        //pacientet vitn dhe muajin e fundit
+        ViewBag.pacientetpernjevit = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastyear).Count();
+        ViewBag.pacientetpernjemuaj = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastmonth).Count();
+        //xhiro e bere per vitn dhe muajin e fundit
+        ViewBag.revenewpernjevit = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastyear).Sum(e => e.Paguar);
+        ViewBag.revenewmuajinefundit = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastmonth).Sum(e => e.Paguar);
+        //lista me mesazhe
         ViewBag.Mesazh = _context.Mesazhs.Where(e => e.Lexuar == false).ToList();
-
-        
-
-        var Analiza =_context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e=>e.model==false).Count();
-        var Pacinte =_context.Pacients.Where(e => e.AdminId == admin).Where(e=>e.Emripacientit!="Model").Count();
-        ViewBag.erdhenperseri = Analiza-Pacinte;
+        //zbresim numrin e pacinteve nga numrin e testeve te kryera 
+        var Analiza = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Count();
+        var Pacinte = _context.Pacients.Where(e => e.AdminId == admin).Where(e => e.Emripacientit != "Model").Count();
+        ViewBag.erdhenperseri = Analiza - Pacinte;
 
         return View();
-
-
     }
+    //vendosim atrubutin lexuar te mesazhit ne true
     public IActionResult Lexuar(int id)
     {
         Mesazh mesazhdb = _context.Mesazhs.FirstOrDefault(e => e.MesazhID == id);
         mesazhdb.Lexuar = true;
         _context.SaveChanges();
 
-
         return RedirectToAction("Home");
-
     }
 
     public IActionResult Register()
     {
-
         return View();
-
-
     }
     [HttpPost]
     public IActionResult Register(Admin user)
     {
         if (ModelState.IsValid)
         {
-
+            //kotrollojme nese ekziston nje admin nje db me kte username
             if (_context.Admins.Any(u => u.Username == user.Username))
             {
-
                 ModelState.AddModelError("Username", "Username already in use!");
                 return View("Register");
             }
+            //krijojm nje objekt passwordhasher<admin> 
+            //dhe ruajm paswordin te pasi i bjem hash
             PasswordHasher<Admin> Hasher = new PasswordHasher<Admin>();
             user.Password = Hasher.HashPassword(user, user.Password);
 
