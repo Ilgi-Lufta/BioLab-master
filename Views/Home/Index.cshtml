@@ -1,11 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<partial name="NavPartial"/>
+<div class="mt-5 container">
 
  <form asp-controller="Home" asp-action="Index">
     <p>
-        Title: <input type="text" name="SearchString" />
-        <input class="btn btn-primary" type="submit" value="Filter" />
+        <input type="text" placeholder="Emri Analizes" name="SearchString" />
+        <input class="btn btn-primary" type="submit" value="Kerko" />
     </p>
 </form>
 <div class="row">
@@ -38,4 +40,9 @@
                          }
         </tbody>
     </table>
+    <div>
+
+    </div>
+   </div>
+   </div>
 

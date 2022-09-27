@@ -1,0 +1,52 @@
+
+<nav class="navbar   fixed-top navbar-expand-lg navbar-dark" style="background-color:#3d6889">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+    <!-- Toggle button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-mdb-toggle="collapse"
+      data-mdb-target="#navbarCenteredExample"
+      aria-controls="navbarCenteredExample"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div
+      class="collapse navbar-collapse justify-content-center"
+      id="navbarCenteredExample"
+    >
+      <!-- Left links -->
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" asp-action="LogInAdmin">Log in</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" asp-action="Register">Register</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" onClick="document.getElementById('Home').scrollIntoView();">Faqja Kryesore</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" onClick="document.getElementById('about').scrollIntoView();">Rreth nesh</a>
+        </li>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link" onClick="document.getElementById('Sherbimet').scrollIntoView();">Sherbimet Tona</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" onClick="document.getElementById('Kontakti').scrollIntoView();">Kontakti</a>
+        </li>
+        
+        
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>

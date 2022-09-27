@@ -1,44 +1,55 @@
 ﻿@{
+
     ViewData["Title"] = "Kerko Flete";
 }
+<partial name="NavPartial" />
+<div class="mt-5 container">
 
- <form asp-controller="Home" asp-action="KerkoFleta">
-    <p>
-        Title: <input type="text" name="SearchString2" />
-        <input class="btn btn-primary" type="submit" value="Kerko" />
-    </p>
-</form>
+    <form asp-controller="Home" asp-action="KerkoFleta">
+        <p>
+            <input type="text"placeholder="Emri Analizes"  name="SearchString2" />
+            <input class="btn btn-primary" type="submit" value="Kerko" />
+        </p>
+    </form>
 
-<div class="row">
-   <div class="col sm-6">
+    <div class="row">
+        <div class="col sm-6">
 
             <table class="table table-striped table-bordered  ">
-            
+
                 <thead>
                     <tr>
-                        <th   scope="col ">Emri</th>
-                        <th   scope="col ">Action</th>
+                        <th scope="col ">Emri</th>
+                        <th scope="col ">Action</th>
 
-                        
+
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ViewBag.Flete )
-                    {
-                    <tr>
-                        <td scope="row"> @item.Emri</td>
-                      
-                        <td scope="row"> 
-                            <a class="btn btn-primary" asp-action="EditFlete" asp-controller="Home" asp-route-id="@item.FleteAnalizeId" > Edito</a> 
-                            <a class="btn btn-primary" asp-action="PerdorFlete" asp-controller="Home" asp-route-id="@item.FleteAnalizeId" > Perdor Flete</a> 
-                            <a class="btn btn-primary" asp-action="FshiFlete" asp-controller="Home" asp-route-id="@item.FleteAnalizeId" > Fshi</a>
-                        </td>
-                    </tr>
-                         }
-            
-           
-        </tbody>
-            
-        
-    </table>
+                    @foreach (var item in ViewBag.Flete)
 
+                    {
+                        <tr>
+                            <td scope="row"> @item.Emri</td>
+
+                            <td scope="row">
+                                <a class="btn btn-primary" asp-action="EditFlete" asp-controller="Home"
+                                asp-route-id="@item.FleteAnalizeId"> Edito</a>
+                                <a class="btn btn-primary" asp-action="PerdorFlete" asp-controller="Home"
+                                asp-route-id="@item.FleteAnalizeId"> Perdor Flete</a>
+                                <a class="btn btn-primary" asp-action="FshiFlete" asp-controller="Home"
+                                asp-route-id="@item.FleteAnalizeId"> Fshi</a>
+                            </td>
+                        </tr>
+
+                    }
+
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+    </div>
+</div>

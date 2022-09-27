@@ -26,6 +26,10 @@ public class FleteAnalize
     [Required]
     public int PacientId  {get;set;} 
     public Pacient? MyPacient {get;set;}
+
+    public int AdminId { get; set; }
+
+    public Admin? MyAdmin { get; set; }
      public List<mtm> mtms  { get; set; } = new List<mtm>();
     //  public List<pacientflete> pacientflete  { get; set; } = new List<pacientflete>();
 

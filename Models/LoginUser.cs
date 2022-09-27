@@ -5,9 +5,8 @@ public class LoginUser
 {
     // No other fields!
     [Required]
-     [MinLength(3)]
-    [MaxLength(15)]
-    public string Emripacientit { get; set; }
+    [Display(Name = "Numri Personal")]
+    public string NrPersonal { get; set; }
     
     [Required]
     [DataType(DataType.Password)]

@@ -14,10 +14,13 @@ public class MyContext : DbContext
     public DbSet<Analiza> Analizat { get; set; } 
     public DbSet<Pacient> Pacients { get; set; } 
 
-
     public DbSet<FleteAnalize> FleteAnalizes { get; set; } 
     
      public DbSet<mtm> mtms { get; set; }
+     public DbSet<Mesazh> Mesazhs { get; set; }
+     public DbSet<Admin> Admins { get; set; }
+
+     
     
 
 

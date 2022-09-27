@@ -6,11 +6,49 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BioLab.Migrations
 {
-    public partial class first : Migration
+    public partial class first1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    AdminId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Password = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.AdminId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Mesazhs",
+                columns: table => new
+                {
+                    MesazhID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Emri = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Content = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NrTel = table.Column<int>(type: "int", nullable: false),
+                    Lexuar = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mesazhs", x => x.MesazhID);
+                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -28,11 +66,18 @@ namespace BioLab.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Cmimi = table.Column<float>(type: "float", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AdminId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Analizat", x => x.AnalizaId);
+                    table.ForeignKey(
+                        name: "FK_Analizat_Admins_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "Admins",
+                        principalColumn: "AdminId",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -44,17 +89,28 @@ namespace BioLab.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Emripacientit = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    NrPersonal = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Gjinia = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Tipi = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    AdminId = table.Column<int>(type: "int", nullable: false),
                     Mosha = table.Column<int>(type: "int", nullable: false),
+                    Password = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pacients", x => x.PacientId);
+                    table.ForeignKey(
+                        name: "FK_Pacients_Admins_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "Admins",
+                        principalColumn: "AdminId",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -73,11 +129,18 @@ namespace BioLab.Migrations
                     Pagesa = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    PacientId = table.Column<int>(type: "int", nullable: false)
+                    PacientId = table.Column<int>(type: "int", nullable: false),
+                    AdminId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FleteAnalizes", x => x.FleteAnalizeId);
+                    table.ForeignKey(
+                        name: "FK_FleteAnalizes_Admins_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "Admins",
+                        principalColumn: "AdminId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FleteAnalizes_Pacients_PacientId",
                         column: x => x.PacientId,
@@ -115,6 +178,16 @@ namespace BioLab.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Analizat_AdminId",
+                table: "Analizat",
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FleteAnalizes_AdminId",
+                table: "FleteAnalizes",
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FleteAnalizes_PacientId",
                 table: "FleteAnalizes",
                 column: "PacientId");
@@ -128,10 +201,18 @@ namespace BioLab.Migrations
                 name: "IX_mtms_FleteAnalizeId",
                 table: "mtms",
                 column: "FleteAnalizeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacients_AdminId",
+                table: "Pacients",
+                column: "AdminId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Mesazhs");
+
             migrationBuilder.DropTable(
                 name: "mtms");
 
@@ -143,6 +224,9 @@ namespace BioLab.Migrations
 
             migrationBuilder.DropTable(
                 name: "Pacients");
+
+            migrationBuilder.DropTable(
+                name: "Admins");
         }
     }
 }

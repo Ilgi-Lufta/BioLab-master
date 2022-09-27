@@ -19,10 +19,32 @@ namespace BioLab.Migrations
                 .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("BioLab.Models.Admin", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("AdminId");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("BioLab.Models.Analiza", b =>
                 {
                     b.Property<int>("AnalizaId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<float>("Cmimi")
@@ -51,6 +73,8 @@ namespace BioLab.Migrations
 
                     b.HasKey("AnalizaId");
 
+                    b.HasIndex("AdminId");
+
                     b.ToTable("Analizat");
                 });
 
@@ -58,6 +82,9 @@ namespace BioLab.Migrations
                 {
                     b.Property<int>("FleteAnalizeId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -90,9 +117,40 @@ namespace BioLab.Migrations
 
                     b.HasKey("FleteAnalizeId");
 
+                    b.HasIndex("AdminId");
+
                     b.HasIndex("PacientId");
 
                     b.ToTable("FleteAnalizes");
+                });
+
+            modelBuilder.Entity("BioLab.Models.Mesazh", b =>
+                {
+                    b.Property<int>("MesazhID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Emri")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Lexuar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("NrTel")
+                        .HasColumnType("int");
+
+                    b.HasKey("MesazhID");
+
+                    b.ToTable("Mesazhs");
                 });
 
             modelBuilder.Entity("BioLab.Models.mtm", b =>
@@ -122,6 +180,9 @@ namespace BioLab.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -136,6 +197,10 @@ namespace BioLab.Migrations
                     b.Property<int>("Mosha")
                         .HasColumnType("int");
 
+                    b.Property<string>("NrPersonal")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -149,16 +214,37 @@ namespace BioLab.Migrations
 
                     b.HasKey("PacientId");
 
+                    b.HasIndex("AdminId");
+
                     b.ToTable("Pacients");
+                });
+
+            modelBuilder.Entity("BioLab.Models.Analiza", b =>
+                {
+                    b.HasOne("BioLab.Models.Admin", "MyAdmin")
+                        .WithMany("MyAnaliz")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyAdmin");
                 });
 
             modelBuilder.Entity("BioLab.Models.FleteAnalize", b =>
                 {
+                    b.HasOne("BioLab.Models.Admin", "MyAdmin")
+                        .WithMany("MyfletAnaliz")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BioLab.Models.Pacient", "MyPacient")
                         .WithMany("MYfleteanaliz")
                         .HasForeignKey("PacientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MyAdmin");
 
                     b.Navigation("MyPacient");
                 });
@@ -180,6 +266,26 @@ namespace BioLab.Migrations
                     b.Navigation("Myanaliz");
 
                     b.Navigation("Myflanaliz");
+                });
+
+            modelBuilder.Entity("BioLab.Models.Pacient", b =>
+                {
+                    b.HasOne("BioLab.Models.Admin", "MyAdmin")
+                        .WithMany("MyPacient")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyAdmin");
+                });
+
+            modelBuilder.Entity("BioLab.Models.Admin", b =>
+                {
+                    b.Navigation("MyAnaliz");
+
+                    b.Navigation("MyPacient");
+
+                    b.Navigation("MyfletAnaliz");
                 });
 
             modelBuilder.Entity("BioLab.Models.Analiza", b =>

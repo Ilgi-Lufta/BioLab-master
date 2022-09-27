@@ -1,3 +1,7 @@
+
+<partial name="NavPartial"/>
+<div class="mt-5 container">
+
 <h3>Emri Pacientit : @ViewBag.thisflet.MyPacient.Emripacientit</h3>
 <h3>Seksi : @ViewBag.thisflet.MyPacient.Gjinia</h3>
 <h3>Tipi pacientit : @ViewBag.thisflet.MyPacient.Tipi</h3>
@@ -68,8 +72,8 @@
         <form asp-controller="Home" asp-action="Shfaqflt2" asp-route-id="@ViewBag.idmodel"
                             asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">
             <p>
-                Title: <input type="text" name="SearchString" />
-                <input class="btn btn-primary" type="submit" value="Filter" />
+                Title: <input type="text" placeholder="Emri Analizes" name="SearchString" />
+                <input class="btn btn-primary" type="submit" value="Kerko" />
             </p>
         </form>
             <table class="table table-striped table-bordered  ">
@@ -104,4 +108,5 @@
             </table>
         </div>
         </div>
-        <a class="btn btn-primary" asp-action="Printo2" asp-controller="Home" asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">Printo</a>
+        <a class="btn btn-primary mt-2" asp-action="Printo2" asp-controller="Home" asp-route-id2="@ViewBag.thisflet.FleteAnalizeId">Printo</a>
+</div>

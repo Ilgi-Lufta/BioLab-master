@@ -1,0 +1,205 @@
+@model Mesazh
+
+<partial name="HpPartial"/>
+<div class="row " id="Home" style="position: relative;">
+
+
+<div  id="carouselExampleFade" class=" carousel slide carousel-fade" data-bs-ride="carousel">
+    <div  class="carousel-inner">
+        <div  class="carousel-item active">
+            <img  src="~/Images/slide03.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img   src="~/Images/slide05.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img  src="~/Images/slide04.jpg" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<div class="row g-0 d-flex  justify-content-center top-100">
+    <div class="col-sm-3 "  >
+        <div  class="card bg-ilgi p-4 rounded-0 relative-top-100">
+            <div class="card-body ">
+                <h1 class=" mb-4 color-white card-title">Rezulatatet Online</h1>
+                <a class="border color-white  p-2" style="text-decoration: none ;" asp-action="LogIn" > Shiko Rezulatet e Tua</a>
+                
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card bg-ilgi1 relative-top-100 rounded-0 p-4">
+            <div class="card-body ">
+                <h1 class=" color-white mb-2 card-title">Orari</h1>
+                <p class="color-white border-bottom mb-4 pb-3 card-text">E Hene - E Premte 8 am - 18 pm </p>
+                <p class="color-white border-bottom mb-4 pb-3 card-text">E Shtune          8 am - 14 pm</p>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card bg-ilgi2 relative-top-100 rounded-0 p-4">
+            <div class="card-body">
+                <h1 class="color-white card-title">Emergjenca </h1>
+                <h5 class=" color-white card-text">Kontaktoni Ne 0695852802 Ne Cdo Ore Te Dites</h5>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<div class="row ilgi" id="about">
+    <div class=" col-sm-6">
+        <div class="row ">
+            <div class="row">
+                <div class=" offset-sm-1 col-sm-6">
+                    <h1 class=" text-color-ilgi m-5">Rreth nesh</h1>
+                </div>
+
+            </div>
+
+
+            <div class=" offset-sm-1 g-0 col-sm-5">
+                <div class="d-flex m-5  align-items-center">
+                    <img src="~/Images/consultation.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">Konsulta Falas </h3>
+                </div>
+                <div class="d-flex m-5  align-items-center">
+                    <img src="~/Images/prices.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">Cmime Konkuruese </h3>
+                </div>
+                <div class="d-flex m-5  align-items-center">
+                    <img src="~/Images/happy.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">10000 Kliente Te Kenaqur</h3>
+                </div>
+
+            </div>
+            <div class="  col-sm-5">
+                <div class="d-flex m-5 align-items-center">
+                    <img src="~/Images/staff.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">Rezulatet online </h3>
+                </div>
+                <div class="d-flex m-5  align-items-center">
+                    <img src="~/Images/Doctors.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">Staff Profesional </h3>
+                </div>
+                <div class="d-flex m-5  align-items-center">
+                    <img src="~/Images/Opened.png" alt="this image">
+                    <h3 class="ms-4 text-color-ilgi">Pergjigje ne kohe rekord </h3>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+<div class="row d-flex justify-content-center g-0 ilgi-fun" id="Sherbimet">
+    <div class="row d-flex justify-content-center align-items-center ">
+        <h1 class="text-center text-color-ilgi2">Sherbimet qe ofrojme </h1>
+        <p></p>
+    </div>
+
+    <div class="col-sm-3 ">
+        <div class="d-flex mb-4 flex-column align-items-center justify-content-center ">
+            <img src="~/Images/cardio.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Monitorime Te Cardios</h3>
+        </div>
+        <div class="d-flex m-4 flex-column align-items-center justify-content-center">
+            <img src="~/Images/medical.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Trajtime Mjeksore</h3>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="d-flex mb-4 flex-column align-items-center justify-content-center ">
+            <img src="~/Images/emergency.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Ndihme Ne Emergjence </h3>
+        </div>
+        <div class="d-flex m-4 flex-column align-items-center justify-content-center">
+            <img src="~/Images/symptom.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Kontroll Simptomash</h3>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="d-flex mb-4 flex-column align-items-center justify-content-center ">
+            <img src="~/Images/Laboratory.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Teste Laboratorike</h3>
+        </div>
+        <div class="d-flex m-4 flex-column align-items-center justify-content-center">
+            <img src="~/Images/general.png" alt="this image">
+            <h3 class="mt-4 text-color-ilgi2">Analiza Te Pergjithshme</h3>
+        </div>
+    </div>
+
+</div>
+<div class="row d-flex " id="Kontakti">
+   
+        <iframe class="col-sm-6" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d719.5949795544014!2d20.082048709244752!3d41.11668767844073!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135043d7edfe9951%3A0x861c0d9e88bc3802!2sBio%20Lab%20agimi!5e0!3m2!1sen!2s!4v1663768530736!5m2!1sen!2s"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    
+    <div class="mt-5 offset-sm-1 col-sm-4">
+        <div class="row">
+            <div class="mb-4 col-sm-6">
+            <h3>Adresa</h3>
+            <p>Rruga 'Rinia'</p>
+            <p>Elbasan ,3001</p>
+            </div>
+            <div class="col-sm-6">
+                <h3>Kontakt</h3>
+                <p>Tel : +355695852802</p>
+                <p>Email : BioLab@gmail.com</p>
+            </div>
+        </div>
+       <form  asp-controller="Home" asp-action="DergoMesazh"  method="post">
+  <div class="row mb-4">
+    <div class="col">
+      <div class="form-outline">
+        <span asp-validation-for="Emri"></span>
+        <input asp-for="Emri" class="form-control" />
+        <label class="form-label" asp-for="Emri">First name</label>
+        
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-outline">
+       <span asp-validation-for="Email"></span>
+        <input asp-for="Email" class="form-control" />
+        <label class="form-label" asp-for="Email"></label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Text input -->
+  <div class="form-outline mb-4">
+   <span asp-validation-for="NrTel"></span>
+        <input asp-for="NrTel" class="form-control" />
+        <label class="form-label" asp-for="NrTel"></label>
+  </div>
+  <div class="form-outline mb-4">
+    <span asp-validation-for="Content"></span>
+        <textarea asp-for="Content" class="form-control"  rows="4"></textarea>
+        <label class="form-label " asp-for="Content"></label>
+  </div>
+
+
+  <!-- Submit button -->
+  <button type="submit" class="btn button-color-ilgi ps-3 pe-3 btn-block mb-4">Dergo</button>
+</form>
+    </div>
+</div>
+
+

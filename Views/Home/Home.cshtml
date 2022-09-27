@@ -1,0 +1,114 @@
+<partial name="NavPartial"/>
+<div class="mt-5 container">
+
+<div class="row mb-5">
+    <div class="col-sm-10">
+        <h1>Welcome to Bio-Lab @ViewBag.Admini.Username </h1>
+    </div>
+    <div class=" col-sm-2">
+
+      <a asp-controller="Home" asp-action="LogOutAdmin" class="btn btn-primary mt-3 mr-3" > Log Out</a>
+    </div>
+</div>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-blue order-card">
+                <div class="card-block">
+                    <h6 class="m-b-20">Total</h6>
+                    <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i><span class="ms-5">@ViewBag.pacientet Pacinte</span></h2>
+                      <h3 class="m-b-0">Erdhen perseri <span class="f-right">  @ViewBag.erdhenperseri</span></h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-green order-card">
+                <div class="card-block">
+                    <h6 class="m-b-20">Muaji fundit</h6>
+                    <h2 class="text-right"><i class="fa fa-rocket f-left"></i><span class="ms-5">@ViewBag.pacientetpernjemuaj Testime</span></h2>
+                    <h3 class="m-b-0">Fitime <span class="f-right">  @ViewBag.revenewmuajinefundit Leke</span></h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-yellow order-card">
+                <div class="card-block">
+                     <h6 class="m-b-20">Viti Fundit</h6>
+                    <h2 class="text-right"><i class="fa fa-rocket f-left"></i><span class="ms-5">@ViewBag.pacientetpernjevit Testime</span></h2>
+                    <h3 class="m-b-0">Fitime <span class="f-right">  @ViewBag.revenewpernjevit Leke</span></h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-pink order-card">
+                <div class="card-block">
+                    <h6 class="m-b-20">Orders Received</h6>
+                    <h2 class="text-right"><i class="fa fa-credit-card f-left"></i><span class="ms-5">486</span></h2>
+                    <p class="m-b-0">Completed Orders<span class="f-right">351</span></p>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+@if(Enumerable.Count(ViewBag.Mesazh)==0)
+{
+    
+    <h3>Asnje mesazh i ri </h3>
+ 
+
+}else{
+    @if(Enumerable.Count(ViewBag.Mesazh)==1){
+
+    <a class="btn btn-primary ms-2 mb-4" onclick="myFunction()"><h4>1 mesazh pa lexur </h4>  </a>
+    }else{
+       <a class="btn btn-primary ms-2 mb-4"  onclick="myFunction()"> <h4>@Enumerable.Count(ViewBag.Mesazh) mesazhe pa lexuar</h4> </a>
+    }
+
+    <div class="row none " id="myDIV">
+   <div class="col sm-9">
+            <table class="table table-striped table-bordered  ">
+                <thead>
+                    <tr>
+                        <th   scope="col">Emri</th>
+                        <th   scope="col">Email</th>
+                        <th   scope="col">Content</th>
+                        <th   scope="col">NrTel</th>
+                        <th   scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Mesazh )
+                    {
+                    <tr>
+                        <td scope="row"> @item.Emri</td>
+                        <td scope="row"> @item.Email</td>
+                        <td scope="row"> @item.Content</td>
+                        <td scope="row"> @item.NrTel</td>
+
+                        <td scope="row"> 
+                            <a class="btn btn-primary" asp-action="Lexuar" asp-controller="Home" asp-route-id="@item.MesazhID" > Lexova</a> 
+                        
+                        </td>
+                    </tr>
+                         }
+        </tbody>
+    </table>
+    </div>
+
+    </div>
+
+}
+   @* <h3>@ViewBag.pacientet pacinte gjithsej</h3>
+    <h3>@ViewBag.pacientetpapaguar pacinte pa paguar gjithsej</h3>
+    <h3>@ViewBag.pacientetpernjemuaj pacinte muajin e fundit</h3>
+    <h3>@ViewBag.pacientetpernjevit pacinte vitin e fundit e fundit</h3>
+    <h3>@ViewBag.revenewpernjevit leke fitime vitin  e fundit</h3>
+    <h3>@ViewBag.revenewmuajinefundit leke fitime muajin  e fundit</h3>
+    <h3>@ViewBag.erdhenperseri Pacinte erdhen perseri</h3> *@
+    

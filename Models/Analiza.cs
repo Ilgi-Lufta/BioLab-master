@@ -28,6 +28,10 @@ public class Analiza
 
      public List<mtm> mtms  { get; set; } = new List<mtm>();
 
+      public int AdminId { get; set; }
+
+    public Admin? MyAdmin { get; set; }
+
 
  
  

@@ -1,4 +1,8 @@
 @model Pacient
+<partial name="NavPartial"/>
+<div class="mt-5 container">
+
+
 <h1>
   @ViewBag.thisflet.Emri
 </h1>
@@ -23,14 +27,14 @@
                 </div>
                 <div class="form-group">
                   <label  asp-for="Gjinia"></label>
-                <select  asp-for="Gjinia">
+                <select  asp-for="Gjinia" class="form-control">
                     <option >Femer</option>
                     <option >Mashkull</option>
                 </select>  
                 </div>
                   <div class="form-group">
                 <label  asp-for="Tipi"></label>
-                <select  asp-for="Tipi">
+                <select  asp-for="Tipi" class="form-control">
                     <option >i Rritur</option>
                     <option >Femije</option>
                 </select>
@@ -41,6 +45,11 @@
                   <input asp-for="Mosha" class="form-control" >
                 
                 </div>
+                 <div class="form-group">
+                  <span asp-validation-for="NrPersonal"></span>
+                  <label asp-for="NrPersonal"></label>
+                  <input asp-for="NrPersonal" class="form-control" >
+                </div>
     </div>
         
     <div class="col-sm-6">
@@ -50,7 +59,7 @@
 </form>
 </div>
 
-
+</div>
 
 
     
