@@ -48,9 +48,23 @@
         <div class="col-md-4 col-xl-3">
             <div class="card bg-c-pink order-card">
                 <div class="card-block">
-                    <h6 class="m-b-20">Orders Received</h6>
-                    <h2 class="text-right"><i class="fa fa-credit-card f-left"></i><span class="ms-5">486</span></h2>
-                    <p class="m-b-0">Completed Orders<span class="f-right">351</span></p>
+                    <h6 class="m-b-20">Krahasim</h6>
+                    @if(ViewBag.Revenewcomparisom2yearsAgoVSlastyear>0)
+                    {
+                    <h2 class="text-right">viti kaluar<span class="f-right">@Math.Abs(ViewBag.Revenewcomparisom2yearsAgoVSlastyear) L </span><i class="fa ms-1 fa-arrow-up"></i></h2>
+                    }
+                    else{
+                    <h2 class="text-right">viti kaluar<span class="f-right">@Math.Abs(ViewBag.Revenewcomparisom2yearsAgoVSlastyear)L </span><i class="fa ms-1  fa-arrow-down"></i></h2>
+                    }
+                    @if(@ViewBag.Revenewcomparisom2monthssAgoVSlastmonth>0){
+
+                    <h3 class="m-b-0">Muaji kaluar<span class="f-right">@Math.Abs(ViewBag.Revenewcomparisom2monthssAgoVSlastmonth)L </span><i class="fa ms-1  fa-arrow-up"></i></h3>
+                    }
+                    else{
+                    <h3 class="m-b-0">Muaji kaluar<span class="f-right">@Math.Abs(ViewBag.Revenewcomparisom2monthssAgoVSlastmonth)L</span><i class="fa ms-1  fa-arrow-down"></i></h3>
+
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -111,4 +125,4 @@
     <h3>@ViewBag.revenewpernjevit leke fitime vitin  e fundit</h3>
     <h3>@ViewBag.revenewmuajinefundit leke fitime muajin  e fundit</h3>
     <h3>@ViewBag.erdhenperseri Pacinte erdhen perseri</h3> *@
-    
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>

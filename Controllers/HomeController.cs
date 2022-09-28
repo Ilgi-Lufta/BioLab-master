@@ -834,7 +834,10 @@ public class HomeController : Controller
         ViewBag.Admini = _context.Admins.FirstOrDefault(e => e.AdminId == admin);
 
         var lastmonth = DateTime.Today.AddMonths(-1);
+        var towmonthsAgo = DateTime.Today.AddMonths(-2);
+
         var lastyear = DateTime.Today.AddMonths(-12);
+        var towyearsAgo = DateTime.Today.AddMonths(-24);
         //pacinentet ne total
         ViewBag.pacientet = _context.Pacients.Where(e => e.AdminId == admin).Where(e => e.Emripacientit != "Model").Count();
         //pacintet qe nuk kane ber pagesen
@@ -851,6 +854,15 @@ public class HomeController : Controller
         var Analiza = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Count();
         var Pacinte = _context.Pacients.Where(e => e.AdminId == admin).Where(e => e.Emripacientit != "Model").Count();
         ViewBag.erdhenperseri = Analiza - Pacinte;
+
+        var lastyearicome = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastyear).Sum(e => e.Paguar);
+        var twoyearsAgoicome = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => (e.CreatedAt < lastyear) && (e.CreatedAt > towyearsAgo)).Sum(e => e.Paguar);
+        ViewBag.Revenewcomparisom2yearsAgoVSlastyear =lastyearicome- twoyearsAgoicome;
+
+        var lastmonthincome = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => e.CreatedAt > lastmonth).Sum(e => e.Paguar);
+        var twomonthsincome = _context.FleteAnalizes.Where(e => e.AdminId == admin).Where(e => e.model == false).Where(e => (e.CreatedAt < lastmonth) && (e.CreatedAt > towmonthsAgo)).Sum(e => e.Paguar);
+        ViewBag.Revenewcomparisom2monthssAgoVSlastmonth =lastmonthincome-twomonthsincome;
+
 
         return View();
     }
