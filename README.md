@@ -12,6 +12,17 @@ Tekniku i laboratorit mund te kerkoje analizat e kryera duke perzgjedhur perjudh
 
 Ky program ruan pagesat per secilin test dhe jep mundesine e nxjerrjes se statistikave ne lidhje me fitimet ne kohe te percaktuara
 
+Ky program ka nje faqe webi informuese per laboartorin perkates ku cdo vizitor mund te lej nje mesazh per laboratorin perkates ,ky mesazh i shfaqet teknikut te laboaratorit
+
+### Permiresime
+
+Ka ende vend per permiresimi si per shembul duke  krijuar nje mundesi per te lene takime me orare fikse nga pacintet dhe shafqur oraret e zena nga pacinte te tjere
+
+Nje liste me kontrollet e e anlizave qe ben nje laborator mund ti degohet automatikisht nje pacinti i cili shton emailin e tij nefaqen e webit
+
+Perdorimi i AJAX
+
+Nje dezajn me bashkekohor per te gjitha view
 
 ### Tekonologjite e perdorura
 
